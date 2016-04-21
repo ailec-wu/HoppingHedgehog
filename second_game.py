@@ -1,4 +1,6 @@
 # Kevin Brown (kgb6fu) and Ailec Wu (aw5fa)
+import sys
+sys.path.insert(0, './ProjectDependencies')
 
 import pygame
 import gamebox
@@ -11,7 +13,7 @@ import random
 camera = gamebox.Camera(800,600)
 
 # Player Sprites
-p1 = gamebox.from_color(750, 50, "purple", 25, 25)
+p1 = gamebox.from_color(750, 50, "brown", 25, 25)
 
 # Global Values
 p1_score = 0
@@ -39,7 +41,7 @@ def y_coins():
     elif y_c >= 30:
         y_c = 0
         for platform in platforms:
-            yellow_coin = gamebox.from_color(platform.x, platform.y, "yellow", 10, 10)
+            yellow_coin = gamebox.from_color(platform.x, platform.y + 50, "yellow", 10, 10)
             yellow_coins.append(yellow_coin)
 
     for yellow_coin in yellow_coins:
@@ -83,8 +85,7 @@ def tick(keys):
 
     # Visuals
         if pause == False:
-            camera.clear("black")
-            camera.draw(gamebox.from_text(750, 50, str(p1_score), "Arial", 30, "purple", True))
+            camera.draw(gamebox.from_text(750, 50, str(p1_score), "Arial", 30, "brown", True))
             camera.draw(p1)
             for yellow_coin in yellow_coins:
                 camera.draw(yellow_coin)
@@ -94,10 +95,9 @@ def tick(keys):
 
     # Game Ending and Restarting
         if p1_score >= 50 and pause == False:
-            camera.clear("black")
             camera.draw(gamebox.from_text(400, 200, str("GAME OVER"), "Arial", 100, "gray", True))
-            camera.draw(gamebox.from_text(400, 300, str("Player 1 wins!"), "Arial", 50, "purple"))
-            camera.draw(gamebox.from_text(400, 370, str("Try again?"), "Arial", 50, "gray"))
+            camera.draw(gamebox.from_text(400, 300, str("You win!"), "Arial", 50, "purple"))
+            camera.draw(gamebox.from_text(400, 370, str("Play again?"), "Arial", 50, "gray"))
             camera.draw(gamebox.from_text(400, 410, str("(press the space bar)"), "Arial", 20, "gray"))
             camera.display()
             pause = True                # Freeze the Game Over menu
