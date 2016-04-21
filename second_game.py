@@ -29,6 +29,9 @@ platforms = []
 
 mirrored_platforms = []
 
+def platform_creator():
+    new_platform = gamebox.from_color(800,0, "green", 50, 600)
+
 def y_coins():
     global y_c, p1_score, p2_score
     if y_c < 30:
@@ -72,8 +75,8 @@ def tick(keys):
             if p1.touches(platform):
                 p1.move_to_stop_overlapping(platform)
                 # Health - 1 part
-
-
+    # Platform Creation and Removal
+        platform_creator()
     # Coin Creation and Removal
         y_coins()
 
