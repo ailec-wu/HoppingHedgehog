@@ -25,14 +25,9 @@ pause = False
 p1.yspeed = 0
 
 # Platforms
-platforms = [gamebox.from_color(-100, 1090, "green", 3000, 1000), gamebox.from_color(50, 220, "gray", 100, 15),
-             gamebox.from_color(625, 120, "gray", 100, 15), gamebox.from_color(50, 450, "gray", 100, 15),
-             gamebox.from_color(750, 220, "gray", 100, 15), gamebox.from_color(750, 450, "gray", 100, 15),
-             gamebox.from_color(400, 450, "gray", 300, 15), gamebox.from_color(400, 220, "gray", 300, 15),
-             gamebox.from_color(175, 120, "gray", 100, 15), gamebox.from_color(175, 350, "gray", 100, 15),
-             gamebox.from_color(625, 350, "gray", 100, 15), gamebox.from_color(-100, -490, "green", 3000, 1000),
-             gamebox.from_color(-490, -100, "green", 1000, 3000), gamebox.from_color(1290, -100, "green", 1000, 3000)]
+platforms = []
 
+mirrored_platforms = []
 
 def y_coins():
     global y_c, p1_score, p2_score
@@ -80,7 +75,7 @@ def tick(keys):
 
 
     # Coin Creation and Removal
-    #     y_coins()
+        y_coins()
 
 
     # Visuals
