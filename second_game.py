@@ -45,10 +45,6 @@ def platform_creator():
     platform_length = (600 - height_position)*2
     mirror_position = height_position - 350
     new_platform = gamebox.from_color(800, height_position, "green", 50, platform_length)
-    #if random.randint(1,3) == 3:
-    yellow_coin = gamebox.from_color(new_platform.x, (new_platform.y*2) + 50, "yellow", 10, 10)
-    yellow_coins.append(yellow_coin)
-
     mirror_platform = gamebox.from_color(800, mirror_position, "green", 50, mirror_position*2)
     if i < 120:
         i += 1
@@ -65,7 +61,13 @@ def platform_creator():
 
 def y_coins():
     global p1_score, platforms, yellow_coins
-
+    for platform in platforms[1::2]:
+        if platform.x == 700:
+            yellow_coin = gamebox.from_color(800, random.randint(150,450), "yellow", 10, 10)
+            if yellow_coin not in yellow_coins:
+                yellow_coins.append(yellow_coin)
+            if yellow_coin.touches(platform):
+                yellow_coin.move_to_stop_overlapping(platform)
     for yellow_coin in yellow_coins:
         yellow_coin.x -= scroll_speed
         if p1.touches(yellow_coin):
@@ -75,6 +77,7 @@ def y_coins():
             musicplayer0 = music0.play()
         if yellow_coin.x < -50:
             yellow_coins.remove(yellow_coin)
+
 
 
 
@@ -127,13 +130,16 @@ def tick(keys):
         platform_creator()
     # Coin Creation and Removal
         y_coins()
-
+    # Score
+        for platform in platforms:
+            if platform.x == 200:
+                p1_score += 0.5
 
     # Visuals
         if pause == False:
             camera.clear("light blue")
             camera.draw(background)
-            camera.draw(gamebox.from_text(50, 50, str(p1_score), "Arial", 30, "brown", True))
+            camera.draw(gamebox.from_text(50, 50, str(int(p1_score)), "Arial", 30, "brown", True))
             camera.draw(gamebox.from_text(400, 50, str(p1_health), "Arial", 30, "red", True))
             camera.draw(p1)
             for yellow_coin in yellow_coins:
@@ -146,7 +152,7 @@ def tick(keys):
         if p1_health == 0 and pause == False:
             camera.clear("light blue")
             camera.draw(gamebox.from_text(400, 200, str("GAME OVER"), "Arial", 100, "gray", True))
-            camera.draw(gamebox.from_text(400, 300, str("Score: " + str(p1_score)), "Arial", 50, "brown"))
+            camera.draw(gamebox.from_text(400, 300, str("Score: " + str(int(p1_score))), "Arial", 50, "brown"))
             camera.draw(gamebox.from_text(400, 370, str("Play again?"), "Arial", 50, "gray"))
             camera.draw(gamebox.from_text(400, 410, str("(press the space bar)"), "Arial", 20, "gray"))
             camera.display()
@@ -161,7 +167,7 @@ def tick(keys):
             game_start = False      # Restart the game
             pause = False           # Unfreeze the game
     #print(was_touching)
-    #print(len(yellow_coins))
+    print(len(yellow_coins))
     #print(str(len(platforms))+" platforms")
 
 ticks_per_second = 60
