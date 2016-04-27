@@ -36,37 +36,35 @@ scroll_speed = 3
 
 yellow_coins = []
 
-mirrored_platforms = []
+up_last_pressed = False
+was_touching = False
 
 def platform_creator():
-    global i, platforms, mirrored_platforms, scroll_speed
+    global i, scroll_speed, platforms, yellow_coins
     height_position = random.randint(400, 500)
     platform_length = (600 - height_position)*2
     mirror_position = height_position - 350
     new_platform = gamebox.from_color(800, height_position, "green", 50, platform_length)
+    #if random.randint(1,3) == 3:
+    yellow_coin = gamebox.from_color(new_platform.x, (new_platform.y*2) + 50, "yellow", 10, 10)
+    yellow_coins.append(yellow_coin)
+
     mirror_platform = gamebox.from_color(800, mirror_position, "green", 50, mirror_position*2)
     if i < 120:
         i += 1
     if i == 120:
         platforms.append(new_platform)
-        mirrored_platforms.append(mirror_platform)
+        platforms.append(mirror_platform)
         i = 0
     for platform in platforms:
         platform.x -= scroll_speed
         if platform.x < -50:
             platforms.remove(platform)
-    for mirror in mirrored_platforms:
-        mirror.x -= scroll_speed
-        if mirror.x < -50:
-            mirrored_platforms.remove(mirror)
+
+
 
 def y_coins():
-    global p1_score, mirrored_platforms, yellow_coins
-
-    for mirror in mirrored_platforms:
-            mirror_position = mirror.y
-            yellow_coin = gamebox.from_color(mirror.x, (mirror_position*2) + 50, "yellow", 10, 10)
-            yellow_coins.append(yellow_coin)
+    global p1_score, platforms, yellow_coins
 
     for yellow_coin in yellow_coins:
         yellow_coin.x -= scroll_speed
@@ -82,7 +80,8 @@ def y_coins():
 
 def tick(keys):
     # Game Beginning Screen and Starting the Game
-    global game_start, pause, p1_score, yellow_coins, y_c, platforms, mirrored_platforms, p1_health
+    global game_start, pause, p1_score, yellow_coins, y_c, platforms, p1_health, up_last_pressed, was_touching
+
     if game_start == False:
         camera.clear("light blue")
         camera.draw(gamebox.from_text(400, 300, str("PRESS SPACE BAR TO START!"), "Arial", 50, "white", True))
@@ -91,22 +90,34 @@ def tick(keys):
             game_start = True
     if game_start == True:
     # Player 1 Collisions with objects
-        p1.yspeed += 1
+        p1.yspeed += 0.5
         p1.y = p1.y + p1.yspeed
-        if pygame.K_UP in keys:
-            p1.yspeed -= 5
+        if pygame.K_UP in keys and not up_last_pressed:
+            p1.yspeed = -8
             music_jump1 = gamebox.load_sound("Jump.wav")
             musicplayer3 = music_jump1.play()
+            up_last_pressed = True
+        if not pygame.K_UP in keys:
+            up_last_pressed = False
+
+        nothing_touched = True  # check if nothing is touched
         for platform in platforms:
             if p1.touches(platform):
-                p1.move_to_stop_overlapping(platform)
-                p1_health -= 1
+                if not was_touching:
+                    p1_health -= 1
                 p1.x += 65
+                was_touching = True
+                nothing_touched = False
+        if nothing_touched:
+            was_touching = False
+
         if p1.x > 200:
             p1.x -= scroll_speed
         if p1.touches(background):
+            was_touching = True
             p1.yspeed = 0
-            p1.move_to_stop_overlapping(background)
+            p1.y -= 100
+            p1_health -= 1
             if pygame.K_UP in keys:
                 p1.yspeed -= 5
         if p1.touches(ceiling):
@@ -129,8 +140,6 @@ def tick(keys):
                 camera.draw(yellow_coin)
             for platform in platforms:
                 camera.draw(platform)
-            for mirror in mirrored_platforms:
-                camera.draw(mirror)
             camera.display()
 
     # Game Ending and Restarting
@@ -145,16 +154,17 @@ def tick(keys):
 
         if pygame.K_SPACE in keys and pause == True:
             platforms = []
-            mirrored_platforms = []
             yellow_coins = []
             p1_health = 10
             p1.y = 50
             p1_score = 0
             game_start = False      # Restart the game
             pause = False           # Unfreeze the game
+    #print(was_touching)
+    #print(len(yellow_coins))
+    #print(str(len(platforms))+" platforms")
 
-
-ticks_per_second = 30
+ticks_per_second = 60
 
 # keep this line the last one in your program
 gamebox.timer_loop(ticks_per_second, tick)
