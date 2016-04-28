@@ -72,11 +72,6 @@ def platform_creator():
 
 def y_coins():
     global p1_score, platforms, yellow_coins, scroll_speed, p1_health, tick_count, tick_count_2
-    # dict = {0: 1, 1: 1, 2: 2, 3: 2, 4: 3, 5: 3, 6: 4, 7: 4, 8: 5, 9: 5, 10: 6, 11: 6, 12: 7, 13: 7, 14: 8, 15: 8, 16: 1,
-    #         17: 1, 18: 2, 19: 2, 20: 3, 21: 3, 22: 4, 23: 4, 24: 5, 25: 5, 26: 6, 27: 6, 28: 7, 29: 7, 30: 8, 31: 8,
-    #         32: 1, 33: 1, 34: 2, 35: 2, 36: 3, 37: 3, 38: 4, 39: 4, 40: 5, 41: 5, 42: 6, 43: 6, 44: 7, 45: 7, 46: 8,
-    #         47: 8, 48: 1, 49: 1, 50: 2, 51: 2, 52: 3, 53: 3, 54: 4, 55: 4, 56: 5, 57: 5, 58: 6, 59: 6, 60: 7, 61: 7,
-    #         62: 8, 63: 8}
     for platform in platforms[1::2]:
         if 600 <= platform.x < 600 + scroll_speed:
             coin_height = random.randint(150, 450)
@@ -163,10 +158,10 @@ def tick(keys):
                 p1_score += 0.5
     # Background
         background1.x -= scroll_speed
-        if background1.x <= -800:
+        if background1.x <= -(800 - scroll_speed):
             background1.x = 2400
         background2.x -= scroll_speed
-        if background2.x <= -800:
+        if background2.x <= -(800 - scroll_speed):
             background2.x = 2400
 
     # Visuals
