@@ -10,12 +10,12 @@ import random
 # http://www.appsrox.com/screenshots/flappychick/Flappy_Pipe.png
 # megalovania = gamebox.load_sound("Undertale OST - Megalovania Extended.wav")
 # megalovaniaplayer0 = megalovania.play()
-
+# http://us.123rf.com/450wm/anastasiaromb/anastasiaromb1603/anastasiaromb160300021/53104705-cute-set-of-forest-wild-animals-nature-fauna-collection.jpg?ver=6
 # Camera Window
 camera = gamebox.Camera(800,600)
 
 # Player Sprites
-p1 = gamebox.from_color(200, 50, "brown", 25, 25)
+p1 = gamebox.from_image(200, 50, "hedgehog.png")
 
 background1 = gamebox.from_image(800, 300, "background.png")
 background2 = gamebox.from_image(2400, 300, "background.png")
@@ -204,6 +204,7 @@ def tick(keys):
             p1_health = 10
             p1.y = 50
             p1_score = 0
+            time = 0
             game_start = False      # Restart the game
             pause = False           # Unfreeze the game
     #print(was_touching)
