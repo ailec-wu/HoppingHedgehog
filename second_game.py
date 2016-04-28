@@ -18,6 +18,7 @@ p1 = gamebox.from_color(200, 50, "brown", 25, 25)
 
 background = gamebox.from_color(400, 600, "light green", 800, 100)
 ceiling = gamebox.from_color(400, -500, "white", 800, 1000)
+black_bar = gamebox.from_color(600, 50, "black", 255, 30)
 
 # Global Values
 p1_score = 0
@@ -31,28 +32,30 @@ p1.yspeed = 0
 # Platforms
 platforms = []
 
-i = 0
+plat_count = 0
 
 scroll_speed = 3
 
 yellow_coins = []
 
+bar = []
+
 up_last_pressed = False
 was_touching = False
 
 def platform_creator():
-    global i, scroll_speed, platforms, yellow_coins
+    global plat_count, scroll_speed, platforms
     height_position = random.randint(400, 500)
     platform_length = (600 - height_position)*2
     mirror_position = height_position - 350
     new_platform = gamebox.from_color(800, height_position, "green", 50, platform_length)
     mirror_platform = gamebox.from_color(800, mirror_position, "green", 50, mirror_position*2)
-    if i < 120:
-        i += 1
-    if i == 120:
+    if plat_count < 120:
+        plat_count += 1
+    if plat_count == 120:
         platforms.append(new_platform)
         platforms.append(mirror_platform)
-        i = 0
+        plat_count = 0
     for platform in platforms:
         platform.x -= scroll_speed
         if platform.x < -50:
@@ -61,12 +64,13 @@ def platform_creator():
 
 
 def y_coins():
-    global p1_score, platforms, yellow_coins
+    global p1_score, platforms, yellow_coins, scroll_speed
     for platform in platforms[1::2]:
         if platform.x == 700:
-            yellow_coin = gamebox.from_color(800, random.randint(150,450), "yellow", 10, 10)
-            if yellow_coin not in yellow_coins:
-                yellow_coins.append(yellow_coin)
+            coin_height = random.randint(150, 450)
+            yellow_coin = gamebox.from_color(800, coin_height, "yellow", 10, 10)
+            # if yellow_coin not in yellow_coins:
+            yellow_coins.append(yellow_coin)
             if yellow_coin.touches(platform):
                 yellow_coin.move_to_stop_overlapping(platform)
     for yellow_coin in yellow_coins:
@@ -80,11 +84,14 @@ def y_coins():
             yellow_coins.remove(yellow_coin)
 
 
+def health_bar():
+    global p1_health
+
 
 
 def tick(keys):
     # Game Beginning Screen and Starting the Game
-    global game_start, pause, p1_score, yellow_coins, y_c, platforms, p1_health, up_last_pressed, was_touching
+    global game_start, pause, p1_score, yellow_coins, y_c, platforms, p1_health, up_last_pressed, was_touching, bar
 
     if game_start == False:
         camera.clear("light blue")
@@ -131,6 +138,8 @@ def tick(keys):
         platform_creator()
     # Coin Creation and Removal
         y_coins()
+    # Health
+        bar = [gamebox.from_color(1000 - (512-chunknum*25), 50, "red", 20, 20) for chunknum in range(p1_health)]
     # Score
         for platform in platforms:
             if platform.x == 200:
@@ -141,10 +150,13 @@ def tick(keys):
             camera.clear("light blue")
             camera.draw(background)
             camera.draw(gamebox.from_text(50, 50, str(int(p1_score)), "Arial", 30, "brown", True))
-            camera.draw(gamebox.from_text(400, 50, str(p1_health), "Arial", 30, "red", True))
-            camera.draw(p1)
+            # camera.draw(gamebox.from_text(400, 50, str(p1_health), "Arial", 30, "red", True))
+            camera.draw(black_bar)
+            for chunk in bar:
+                camera.draw(chunk)
             for yellow_coin in yellow_coins:
                 camera.draw(yellow_coin)
+            camera.draw(p1)
             for platform in platforms:
                 camera.draw(platform)
             camera.display()
