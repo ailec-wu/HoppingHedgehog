@@ -7,6 +7,7 @@ import gamebox
 import random
 
 # http://wallpaper.zone/img/16093.png
+# http://www.appsrox.com/screenshots/flappychick/Flappy_Pipe.png
 # megalovania = gamebox.load_sound("Undertale OST - Megalovania Extended.wav")
 # megalovaniaplayer0 = megalovania.play()
 
@@ -16,7 +17,9 @@ camera = gamebox.Camera(800,600)
 # Player Sprites
 p1 = gamebox.from_color(200, 50, "brown", 25, 25)
 
-background = gamebox.from_color(400, 600, "light green", 800, 100)
+background1 = gamebox.from_image(800, 300, "background.png")
+background2 = gamebox.from_image(2400, 300, "background.png")
+ground = gamebox.from_color(400, 600, "light green", 800, 100)
 ceiling = gamebox.from_color(400, -500, "white", 800, 1000)
 black_bar = gamebox.from_color(600, 50, "black", 255, 30)
 
@@ -52,6 +55,7 @@ def platform_creator():
     platform_length = (600 - height_position)*2
     mirror_position = height_position - 350
     new_platform = gamebox.from_color(800, height_position, "green", 50, platform_length)
+    new_platform = gamebox.from_image(800, height_position, "pipe_b.png")
     mirror_platform = gamebox.from_color(800, mirror_position, "green", 50, mirror_position*2)
     if plat_count < 120:
         plat_count += 1
@@ -102,7 +106,7 @@ def y_coins():
 
 def tick(keys):
     # Game Beginning Screen and Starting the Game
-    global game_start, pause, p1_score, yellow_coins, y_c, platforms, p1_health, up_last_pressed, was_touching, bar
+    global game_start, pause, p1_score, yellow_coins, y_c, platforms, p1_health, up_last_pressed, was_touching, bar, background1
 
     if game_start == False:
         camera.clear("light blue")
@@ -135,7 +139,7 @@ def tick(keys):
 
         if p1.x > 200:
             p1.x -= scroll_speed
-        if p1.touches(background):
+        if p1.touches(ground):
             was_touching = True
             p1.yspeed = 0
             p1.y -= 100
@@ -157,11 +161,20 @@ def tick(keys):
         for platform in platforms:
             if platform.x == 200:
                 p1_score += 0.5
+    # Background
+        background1.x -= scroll_speed
+        if background1.x <= -800:
+            background1.x = 2400
+        background2.x -= scroll_speed
+        if background2.x <= -800:
+            background2.x = 2400
 
     # Visuals
         if pause == False:
             camera.clear("light blue")
-            camera.draw(background)
+            camera.draw(ground)
+            camera.draw(background1)
+            camera.draw(background2)
             camera.draw(gamebox.from_text(50, 50, str(int(p1_score)), "Arial", 30, "brown", True))
             # camera.draw(gamebox.from_text(400, 50, str(p1_health), "Arial", 30, "red", True))
             camera.draw(black_bar)
