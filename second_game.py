@@ -64,9 +64,9 @@ def platform_creator():
 
 
 def y_coins():
-    global p1_score, platforms, yellow_coins, scroll_speed
+    global p1_score, platforms, yellow_coins, scroll_speed, p1_health
     for platform in platforms[1::2]:
-        if platform.x == 700:
+        if 600 <= platform.x < 600 + scroll_speed:
             coin_height = random.randint(150, 450)
             yellow_coin = gamebox.from_color(800, coin_height, "yellow", 10, 10)
             # if yellow_coin not in yellow_coins:
@@ -82,10 +82,6 @@ def y_coins():
             musicplayer0 = music0.play()
         if yellow_coin.x < -50:
             yellow_coins.remove(yellow_coin)
-
-
-def health_bar():
-    global p1_health
 
 
 
@@ -139,6 +135,8 @@ def tick(keys):
     # Coin Creation and Removal
         y_coins()
     # Health
+        if p1_health > 10:
+            p1_health = 10
         bar = [gamebox.from_color(1000 - (512-chunknum*25), 50, "red", 20, 20) for chunknum in range(p1_health)]
     # Score
         for platform in platforms:
@@ -180,7 +178,7 @@ def tick(keys):
             game_start = False      # Restart the game
             pause = False           # Unfreeze the game
     #print(was_touching)
-    print(len(yellow_coins))
+    #print(len(yellow_coins))
     #print(str(len(platforms))+" platforms")
 
 ticks_per_second = 60
