@@ -8,9 +8,8 @@ import random
 
 # http://wallpaper.zone/img/16093.png
 # http://www.appsrox.com/screenshots/flappychick/Flappy_Pipe.png
-# megalovania = gamebox.load_sound("Undertale OST - Megalovania Extended.wav")
-# megalovaniaplayer0 = megalovania.play()
 # http://us.123rf.com/450wm/anastasiaromb/anastasiaromb1603/anastasiaromb160300021/53104705-cute-set-of-forest-wild-animals-nature-fauna-collection.jpg?ver=6
+
 # Camera Window
 camera = gamebox.Camera(800,600)
 
@@ -51,6 +50,7 @@ was_touching = False
 
 time = 0
 
+
 def platform_creator():
     global plat_count, scroll_speed, platforms
     height_position = random.randint(400, 700)
@@ -72,22 +72,17 @@ def platform_creator():
             platform.x -= scroll_speed
 
 
-
 def y_coins():
     global p1_score, platforms, yellow_coins, scroll_speed, p1_health, tick_count, tick_count_2
     for platform in platforms[1::2]:
         if 600 <= platform.x < 600 + scroll_speed:
             coin_height = random.randint(150, 450)
             yellow_coin = gamebox.from_image(800, coin_height, "coin_1.png")
-            # yellow_coin = gamebox.from_color(800, coin_height, "yellow", 10, 10)
-            # if yellow_coin not in yellow_coins:
             yellow_coins.append(yellow_coin)
             if yellow_coin.touches(platform):
                 yellow_coin.move_to_stop_overlapping(platform)
     for yellow_coin in yellow_coins:
         yellow_coin.image = "coin_"+str(tick_count_2+1)+".png"
-
-        #yellow_coin.image = "coin_" + str(tick_count + 1) + ".png"
         yellow_coin.x -= scroll_speed
         if p1.touches(yellow_coin):
             yellow_coins.remove(yellow_coin)
@@ -97,25 +92,24 @@ def y_coins():
         if yellow_coin.x < -50:
             yellow_coins.remove(yellow_coin)
 
-        tick_count = (tick_count+1)%128
+        tick_count = (tick_count+1) % 128
         tick_count_2 = tick_count//16
-        #print(tick_count_2)
 
 
 def tick(keys):
     # Game Beginning Screen and Starting the Game
-    global game_start, pause, p1_score, yellow_coins, y_c, platforms, p1_health, up_last_pressed, was_touching, bar, background1, time
+    global game_start, pause, p1_score, yellow_coins, platforms, p1_health, up_last_pressed, was_touching, bar, background1, time
 
-    if game_start == False:
+    if game_start is False:
         camera.clear("light blue")
         camera.draw(gamebox.from_text(400, 300, str("PRESS SPACE BAR TO START!"), "Arial", 50, "white", True))
         camera.display()
         if pygame.K_SPACE in keys:
             game_start = True
-    if game_start == True:
-    # Player 1 Collisions with objects
+    if game_start is True:
+        # Player 1 Collisions with objects
         p1.yspeed += 0.5
-        p1.y = p1.y + p1.yspeed
+        p1.y += p1.yspeed
         if pygame.K_UP in keys and not up_last_pressed:
             p1.yspeed = -8
             music_jump1 = gamebox.load_sound("Jump.wav")
@@ -169,7 +163,7 @@ def tick(keys):
         time += 1
 
     # Visuals
-        if pause == False:
+        if pause is False:
             camera.clear("light blue")
             camera.draw(ground)
             camera.draw(background1)
@@ -178,7 +172,6 @@ def tick(keys):
                 camera.draw(platform)
             camera.draw(gamebox.from_text(50, 50, str(int(p1_score)), "Arial", 30, "brown", True))
             camera.draw(gamebox.from_text(750, 50, str(time//ticks_per_second), "Arial", 30, "black", True))
-            # camera.draw(gamebox.from_text(400, 50, str(p1_health), "Arial", 30, "red", True))
             camera.draw(black_bar)
             for chunk in bar:
                 camera.draw(chunk)
@@ -188,7 +181,7 @@ def tick(keys):
             camera.display()
 
     # Game Ending and Restarting
-        if p1_health == 0 and pause == False:
+        if p1_health == 0 and pause is False:
             camera.clear("light blue")
             camera.draw(gamebox.from_text(400, 200, str("GAME OVER"), "Arial", 100, "black", True))
             camera.draw(gamebox.from_text(400, 300, str("Score: " + str(int(p1_score))), "Arial", 50, "brown"))
@@ -198,7 +191,7 @@ def tick(keys):
             camera.display()
             pause = True                # Freeze the Game Over menu
 
-        if pygame.K_SPACE in keys and pause == True:
+        if pygame.K_SPACE in keys and pause is True:
             platforms = []
             yellow_coins = []
             p1_health = 10
@@ -207,9 +200,6 @@ def tick(keys):
             time = 0
             game_start = False      # Restart the game
             pause = False           # Unfreeze the game
-    #print(was_touching)
-    #print(len(yellow_coins))
-    #print(str(len(platforms))+" platforms")
 
 
 ticks_per_second = 60
