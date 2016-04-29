@@ -174,6 +174,8 @@ def tick(keys):
             camera.draw(ground)
             camera.draw(background1)
             camera.draw(background2)
+            for platform in platforms:
+                camera.draw(platform)
             camera.draw(gamebox.from_text(50, 50, str(int(p1_score)), "Arial", 30, "brown", True))
             camera.draw(gamebox.from_text(750, 50, str(time//ticks_per_second), "Arial", 30, "black", True))
             # camera.draw(gamebox.from_text(400, 50, str(p1_health), "Arial", 30, "red", True))
@@ -183,8 +185,6 @@ def tick(keys):
             for yellow_coin in yellow_coins:
                 camera.draw(yellow_coin)
             camera.draw(p1)
-            for platform in platforms:
-                camera.draw(platform)
             camera.display()
 
     # Game Ending and Restarting
