@@ -102,7 +102,8 @@ def tick(keys):
 
     if game_start is False:
         camera.clear("light blue")
-        camera.draw(gamebox.from_text(400, 300, str("PRESS SPACE BAR TO START!"), "Arial", 50, "white", True))
+        camera.draw(gamebox.from_text(400, 300, str("PRESS SPACE BAR TO START!"), "Arial", 50, "black", True))
+        camera.draw(gamebox.from_text(400, 350, str("Press UP to jump"), "Arial", 30, "black", True))
         camera.display()
         if pygame.K_SPACE in keys:
             game_start = True
